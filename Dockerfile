@@ -19,6 +19,13 @@ RUN  apt install build-essential checkinstall zlib1g-dev libssl-dev -y \
     && ./bootstrap \
     && sudo make install
     
+RUN git clone https://github.com/coin-or/qpOASES.git \
+    && cd qpOASES \
+    && mkdir build \
+    && cd build \
+    && cmake -DCMAKE_POLICY_VERSION_MINIMUM=3.5 .. \
+    && make \
+    && sudo make install
 
 
 RUN git clone --recursive https://github.com/osqp/osqp \
@@ -28,8 +35,8 @@ RUN git clone --recursive https://github.com/osqp/osqp \
     && mkdir build \
     && cd build \
     && cmake -DCMAKE_POLICY_VERSION_MINIMUM=3.5 .. \
-    && make \
-    && sudo make install
+    && sudo cmake --build . --target install \
+    && sudo cp /usr/local/include/osqp/*.h .. 
 
 RUN git clone https://github.com/robotology/osqp-eigen.git \ 
     && cd osqp-eigen \
@@ -41,6 +48,6 @@ RUN git clone https://github.com/robotology/osqp-eigen.git \
     && sudo make install
 
 
-
+RUN apt install -qqy python3-catkin-tools
 
 
